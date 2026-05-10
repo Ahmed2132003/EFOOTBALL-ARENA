@@ -1,0 +1,93 @@
+# ============================================
+# eFootball Arena — Docker Compose
+# Ports: Backend=8765 | Frontend=5500 | DB=5433
+# ============================================
+
+version: "3.9"
+
+services:
+
+  # ── PostgreSQL Database ──────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: efootball_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # host:container — 5433 خارجياً، 5432 داخل الـ network
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - efootball_network
+
+  # ── Django Backend ───────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: efootball_backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=db
+      # داخل Docker الـ DB port هو 5432 دايماً
+      - DB_PORT=5432
+    volumes:
+      - ./backend:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      # host:container
+      - "8765:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - efootball_network
+
+  # ── React Frontend ───────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: efootball_frontend
+    restart: unless-stopped
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      # منع تعارض node_modules بين host و container
+      - /app/node_modules
+    ports:
+      # host:container
+      - "5500:3000"
+    depends_on:
+      - backend
+    networks:
+      - efootball_network
+
+# ── Volumes ──────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+  static_volume:
+    driver: local
+  media_volume:
+    driver: local
+
+# ── Networks ──────────────────────────────────
+networks:
+  efootball_network:
+    driver: bridge

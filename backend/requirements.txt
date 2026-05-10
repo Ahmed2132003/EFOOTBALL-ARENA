@@ -1,0 +1,30 @@
+# ============================================
+# eFootball Arena — Python Dependencies
+# ============================================
+
+# Core Framework
+django==4.2.9
+
+# REST API
+djangorestframework==3.14.0
+
+# PostgreSQL Adapter
+# psycopg2-binary: النسخة الجاهزة بدون compile — مثالية للـ Docker
+psycopg2-binary==2.9.9
+
+# CORS Headers — للسماح لـ React بالتواصل مع Django
+django-cors-headers==4.3.1
+
+# Environment Variables — قراءة .env بأمان
+python-decouple==3.8
+
+# Gunicorn — Production WSGI Server
+gunicorn==21.2.0
+
+# Django Filter — للـ filtering في API
+django-filter==23.5
+
+# Pillow — لمعالجة الصور (مطلوب لـ ImageField)
+Pillow==10.2.0
+
+djangorestframework-simplejwt==5.3.1
