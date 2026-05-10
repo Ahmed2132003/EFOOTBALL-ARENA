@@ -3,6 +3,44 @@ import { persist } from "zustand/middleware";
 import { authAPI } from "../api/auth.api";
 import { tokenUtils } from "../utils/token";
 
+const getFirstError = (value) => {
+  if (Array.isArray(value)) return value[0];
+  if (typeof value === "string") return value;
+  return null;
+};
+
+const getApiErrorMessage = (error, fallbackMessage) => {
+  const errorData = error.response?.data;
+
+  if (!errorData) {
+    return error.request
+      ? "تعذر الاتصال بالسيرفر. تأكد أن الباك إند يعمل على localhost:8765."
+      : fallbackMessage;
+  }
+
+  const fields = [
+    "detail",
+    "non_field_errors",
+    "username",
+    "email",
+    "password",
+    "password_confirm",
+    "error",
+  ];
+
+  for (const field of fields) {
+    const message = getFirstError(errorData[field]);
+    if (message) return message;
+  }
+
+  return fallbackMessage;
+};
+
+const readTokens = (data) => ({
+  access: data?.tokens?.access || data?.access,
+  refresh: data?.tokens?.refresh || data?.refresh,
+});
+
 const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -21,15 +59,18 @@ const useAuthStore = create(
       login: async (username, password) => {
         set({ loading: true, error: null });
         try {
-          // response shape: { message, tokens: { access, refresh }, user }
+          // Backend response shape: { message, tokens: { access, refresh }, user }
           const data = await authAPI.login(username, password);
-          const { tokens, user } = data;
-          const { access, refresh } = tokens;
+          const { access, refresh } = readTokens(data);
+
+          if (!access || !refresh) {
+            throw new Error("Login response did not include authentication tokens.");
+          }
 
           tokenUtils.setTokens(access, refresh);
 
           set({
-            user: user || null,
+            user: data.user || null,
             accessToken: access,
             refreshToken: refresh,
             isAuthenticated: true,
@@ -37,22 +78,26 @@ const useAuthStore = create(
             error: null,
           });
 
-          if (!user) {
+          if (!data.user) {
             await get().fetchMe();
           }
 
           return { success: true };
         } catch (error) {
-          const errorData = error.response?.data;
-          const errorMessage =
-            errorData?.detail ||
-            errorData?.non_field_errors?.[0] ||
-            errorData?.username?.[0] ||
-            errorData?.email?.[0] ||
-            errorData?.password?.[0] ||
-            "فشل تسجيل الدخول. تحقق من البيانات.";
+          tokenUtils.clearTokens();
+          const errorMessage = getApiErrorMessage(
+            error,
+            "فشل تسجيل الدخول. تحقق من اسم المستخدم أو البريد الإلكتروني وكلمة المرور."
+          );
 
-          set({ loading: false, error: errorMessage });          
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            loading: false,
+            error: errorMessage,
+          });
           return { success: false, error: errorMessage };
         }
       },
@@ -60,15 +105,18 @@ const useAuthStore = create(
       register: async (username, email, password, passwordConfirm) => {
         set({ loading: true, error: null });
         try {
-          // response shape: { message, tokens: { access, refresh }, user }
+          // Backend response shape: { message, tokens: { access, refresh }, user }
           const data = await authAPI.register(username, email, password, passwordConfirm);
-          const { tokens, user } = data;
-          const { access, refresh } = tokens;
+          const { access, refresh } = readTokens(data);
+
+          if (!access || !refresh) {
+            throw new Error("Registration response did not include authentication tokens.");
+          }
 
           tokenUtils.setTokens(access, refresh);
 
           set({
-            user: user || null,
+            user: data.user || null,
             accessToken: access,
             refreshToken: refresh,
             isAuthenticated: true,
@@ -76,26 +124,34 @@ const useAuthStore = create(
             error: null,
           });
 
-          return { success: true };
-        } catch (error) {
-          const errorData = error.response?.data;
-          let errorMessage = "فشل إنشاء الحساب.";
-
-          if (errorData) {
-            if (errorData.email) {
-              errorMessage = `البريد الإلكتروني: ${errorData.email[0]}`;
-            } else if (errorData.username) {
-              errorMessage = `اسم المستخدم: ${errorData.username[0]}`;
-            } else if (errorData.password) {
-              errorMessage = `كلمة المرور: ${errorData.password[0]}`;
-            } else if (errorData.password_confirm) {
-              errorMessage = `تأكيد كلمة المرور: ${errorData.password_confirm[0]}`;
-            } else if (errorData.detail) {
-              errorMessage = errorData.detail;
-            }
+          if (!data.user) {
+            await get().fetchMe();
           }
 
-          set({ loading: false, error: errorMessage });
+          return { success: true };
+        } catch (error) {
+          tokenUtils.clearTokens();
+          const rawMessage = getApiErrorMessage(error, "فشل إنشاء الحساب.");
+          const fieldLabels = {
+            email: "البريد الإلكتروني",
+            username: "اسم المستخدم",
+            password: "كلمة المرور",
+            password_confirm: "تأكيد كلمة المرور",
+          };
+          const errorData = error.response?.data || {};
+          const fieldName = Object.keys(fieldLabels).find((field) => errorData[field]);
+          const errorMessage = fieldName
+            ? `${fieldLabels[fieldName]}: ${getFirstError(errorData[fieldName])}`
+            : rawMessage;
+
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            loading: false,
+            error: errorMessage,
+          });
           return { success: false, error: errorMessage };
         }
       },
@@ -125,13 +181,20 @@ const useAuthStore = create(
       fetchMe: async () => {
         set({ loading: true });
         try {
-          // response shape: { message, user: {...} }
+          // Backend response shape: { message, user: {...} }
           const data = await authAPI.getMe();
           const user = data.user || data;
-          set({ user, loading: false });
+          set({ user, loading: false, isAuthenticated: true });
           return user;
         } catch {
-          set({ loading: false });
+          tokenUtils.clearTokens();
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            loading: false,
+          });
           return null;
         }
       },
@@ -143,7 +206,12 @@ const useAuthStore = create(
         const refreshToken = tokenUtils.getRefreshToken();
 
         if (!accessToken || !refreshToken) {
-          set({ isAuthenticated: false, user: null });
+          set({
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+            user: null,
+          });
           return;
         }
 

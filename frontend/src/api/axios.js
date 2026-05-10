@@ -1,12 +1,17 @@
 import axios from "axios";
 import { tokenUtils } from "../utils/token";
 
-const BASE_URL = "http://localhost:8765/api/v1";
+const normalizeBaseURL = (url) => url.replace(/\/+$/, "");
+
+export const API_BASE_URL = normalizeBaseURL(
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8765/api/v1"
+);
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
+    Accept: "application/json",
   },
   timeout: 15000,
 });
@@ -45,10 +50,18 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
+
+    const requestUrl = originalRequest.url || "";
+
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes("/auth/token/refresh/")
+      !requestUrl.includes("/auth/token/refresh/") &&
+      !requestUrl.includes("/auth/login/") &&
+      !requestUrl.includes("/auth/register/")
     ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -73,11 +86,16 @@ axiosInstance.interceptors.response.use(
       }
 
       try {
-        const response = await axios.post(`${BASE_URL}/auth/token/refresh/`, {
+        const response = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {
           refresh: refreshToken,
         });
 
         const newAccessToken = response.data.access;
+
+        if (!newAccessToken) {
+          throw new Error("Token refresh response did not include an access token.");
+        }
+
         tokenUtils.setAccessToken(newAccessToken);
 
         axiosInstance.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;

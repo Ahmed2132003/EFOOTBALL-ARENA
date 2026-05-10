@@ -27,7 +27,7 @@ const Register = () => {
 
     if (!formData.username.trim()) {
       errors.username = "اسم المستخدم مطلوب";
-    } else if (formData.username.length < 3) {
+    } else if (formData.username.trim().length < 3) {        
       errors.username = "اسم المستخدم يجب أن يكون 3 أحرف على الأقل";
     }
 
@@ -66,8 +66,8 @@ const Register = () => {
     if (!validateForm()) return;
 
     const result = await register(
-      formData.username,
-      formData.email,
+      formData.username.trim(),
+      formData.email.trim(),      
       formData.password,
       formData.confirmPassword
     );
@@ -180,7 +180,7 @@ const Register = () => {
               />
               {fieldErrors.confirmPassword && (
                 <p className="mt-1.5 text-sm text-danger flex items-center gap-1">
-                  <span>⚠</span> {fieldErrors.confirmPassword}
+                  <span>⚠</span> {fieldErrors.confirmPassword}                  
                 </p>
               )}
             </div>

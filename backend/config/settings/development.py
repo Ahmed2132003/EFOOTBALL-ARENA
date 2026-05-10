@@ -15,14 +15,17 @@ ALLOWED_HOSTS = config(
     cast=Csv()
 )
 
-# ── CORS — بورت React الجديد 5500 ───────────────
+# ── CORS — بورتات React/Vite المحلية ───────────────
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
-    default="http://localhost:5500,http://127.0.0.1:5500",
+    default=(
+        "http://localhost:5500,http://127.0.0.1:5500,"
+        "http://localhost:3000,http://127.0.0.1:3000,"
+        "http://localhost:5173,http://127.0.0.1:5173"
+    ),
     cast=Csv()
 )
 
-CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # ── Email Backend ──────────────────────────────
