@@ -70,13 +70,8 @@ class LoginViewTest(APITestCase):
             email="login@arena.com",
             password="StrongPass123!",
         )
-
-    def test_login_with_username_success(self):
-        response = self.client.post(
-            self.url,
-            {"username": "loginplayer", "password": "StrongPass123!"},
-            format="json",
-        )
+        
+    def assert_login_success_response(self, response):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("tokens", response.data)
         self.assertIn("access", response.data["tokens"])
@@ -84,6 +79,30 @@ class LoginViewTest(APITestCase):
         self.assertEqual(response.data["user"]["username"], "loginplayer")
         self.assertIn("rank_level", response.data["user"])
         self.assertIn("rating", response.data["user"])
+
+    def test_login_with_username_success(self):
+        response = self.client.post(
+            self.url,
+            {"username": "loginplayer", "password": "StrongPass123!"},
+            format="json",
+        )
+        self.assert_login_success_response(response)
+
+    def test_login_with_email_success(self):
+        response = self.client.post(
+            self.url,
+            {"username": "login@arena.com", "password": "StrongPass123!"},
+            format="json",
+        )
+        self.assert_login_success_response(response)
+
+    def test_login_with_email_case_insensitive_success(self):
+        response = self.client.post(
+            self.url,
+            {"username": "LOGIN@ARENA.COM", "password": "StrongPass123!"},
+            format="json",
+        )
+        self.assert_login_success_response(response)
 
     def test_login_wrong_password(self):
         response = self.client.post(

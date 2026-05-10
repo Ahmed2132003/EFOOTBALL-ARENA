@@ -20,6 +20,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs):
+        login_identifier = attrs.get(self.username_field, "").strip()
+
+        if login_identifier:
+            attrs[self.username_field] = login_identifier
+
+        if "@" in login_identifier:
+            user = (
+                User.objects.filter(email__iexact=login_identifier)
+                .only("username")
+                .first()
+            )
+            if user:
+                attrs[self.username_field] = user.get_username()
+
         data = super().validate(attrs)
         user = self.user
         # بيانات إضافية في الـ response body

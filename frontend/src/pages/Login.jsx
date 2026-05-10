@@ -24,8 +24,11 @@ const Login = () => {
     const errors = {};
 
     if (!formData.username.trim()) {
-      errors.username = "اسم المستخدم مطلوب";
-    } else if (formData.username.trim().length < 3) {
+      errors.username = "اسم المستخدم أو البريد الإلكتروني مطلوب";
+    } else if (
+      !formData.username.includes("@") &&
+      formData.username.trim().length < 3
+    ) {        
       errors.username = "اسم المستخدم يجب أن يكون 3 أحرف على الأقل";
     }
 
@@ -51,7 +54,7 @@ const Login = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const result = await login(formData.username, formData.password);
+    const result = await login(formData.username.trim(), formData.password);    
     if (result.success) {
       toast.success("تم تسجيل الدخول بنجاح! 🎉");
     }
@@ -74,17 +77,17 @@ const Login = () => {
         <div className="bg-secondary border border-white/10 rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
 
-            {/* Username Field */}
+            {/* Login Identifier Field */}            
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                اسم المستخدم
+                اسم المستخدم أو البريد الإلكتروني                
               </label>
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="PlayerName123"
+                placeholder="PlayerName123 أو player@example.com"                
                 disabled={loading}
                 className={`w-full bg-primary border rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all duration-200 disabled:opacity-50 ${
                   fieldErrors.username
