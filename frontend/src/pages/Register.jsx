@@ -68,11 +68,12 @@ const Register = () => {
     const result = await register(
       formData.username,
       formData.email,
-      formData.password
+      formData.password,
+      formData.confirmPassword
     );
 
     if (result.success) {
-      toast.success("تم إنشاء الحساب بنجاح! سجل دخولك الآن 🎉");
+      toast.success("تم إنشاء الحساب بنجاح! 🎉");
     }
   };
 

@@ -19,10 +19,10 @@ const useAuth = () => {
   } = useAuthStore();
 
   const handleLogin = useCallback(
-    async (email, password) => {
-      const result = await login(email, password);
+    async (username, password) => {
+      const result = await login(username, password);
       if (result.success) {
-        navigate("/");
+        navigate("/dashboard");
       }
       return result;
     },
@@ -30,10 +30,10 @@ const useAuth = () => {
   );
 
   const handleRegister = useCallback(
-    async (username, email, password) => {
-      const result = await register(username, email, password);
+    async (username, email, password, passwordConfirm) => {
+      const result = await register(username, email, password, passwordConfirm);
       if (result.success) {
-        navigate("/login");
+        navigate("/dashboard");
       }
       return result;
     },

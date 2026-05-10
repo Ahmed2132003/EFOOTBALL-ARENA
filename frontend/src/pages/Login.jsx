@@ -4,10 +4,10 @@ import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {
-  const { login, loading, error, isAuthenticated, clearError } = useAuth();
+  const { login, loading, error, clearError } = useAuth();
 
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -23,10 +23,10 @@ const Login = () => {
   const validateForm = () => {
     const errors = {};
 
-    if (!formData.email.trim()) {
-      errors.email = "البريد الإلكتروني مطلوب";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = "صيغة البريد الإلكتروني غير صحيحة";
+    if (!formData.username.trim()) {
+      errors.username = "اسم المستخدم مطلوب";
+    } else if (formData.username.trim().length < 3) {
+      errors.username = "اسم المستخدم يجب أن يكون 3 أحرف على الأقل";
     }
 
     if (!formData.password) {
@@ -51,7 +51,7 @@ const Login = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const result = await login(formData.email, formData.password);
+    const result = await login(formData.username, formData.password);
     if (result.success) {
       toast.success("تم تسجيل الدخول بنجاح! 🎉");
     }
@@ -74,27 +74,27 @@ const Login = () => {
         <div className="bg-secondary border border-white/10 rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
 
-            {/* Email Field */}
+            {/* Username Field */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                البريد الإلكتروني
+                اسم المستخدم
               </label>
               <input
-                type="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
-                placeholder="example@email.com"
+                placeholder="PlayerName123"
                 disabled={loading}
                 className={`w-full bg-primary border rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all duration-200 disabled:opacity-50 ${
-                  fieldErrors.email
+                  fieldErrors.username
                     ? "border-danger focus:ring-danger/30"
                     : "border-white/10 focus:border-accent focus:ring-accent/20"
                 }`}
               />
-              {fieldErrors.email && (
+              {fieldErrors.username && (
                 <p className="mt-1.5 text-sm text-danger flex items-center gap-1">
-                  <span>⚠</span> {fieldErrors.email}
+                  <span>⚠</span> {fieldErrors.username}
                 </p>
               )}
             </div>

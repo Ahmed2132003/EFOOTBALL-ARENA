@@ -18,11 +18,13 @@ const useAuthStore = create(
         set({ accessToken, refreshToken });
       },
 
-      login: async (email, password) => {
+      login: async (username, password) => {
         set({ loading: true, error: null });
         try {
-          const data = await authAPI.login(email, password);
-          const { access, refresh, user } = data;
+          // response shape: { message, tokens: { access, refresh }, user }
+          const data = await authAPI.login(username, password);
+          const { tokens, user } = data;
+          const { access, refresh } = tokens;
 
           tokenUtils.setTokens(access, refresh);
 
@@ -51,11 +53,25 @@ const useAuthStore = create(
         }
       },
 
-      register: async (username, email, password) => {
+      register: async (username, email, password, passwordConfirm) => {
         set({ loading: true, error: null });
         try {
-          await authAPI.register(username, email, password);
-          set({ loading: false, error: null });
+          // response shape: { message, tokens: { access, refresh }, user }
+          const data = await authAPI.register(username, email, password, passwordConfirm);
+          const { tokens, user } = data;
+          const { access, refresh } = tokens;
+
+          tokenUtils.setTokens(access, refresh);
+
+          set({
+            user: user || null,
+            accessToken: access,
+            refreshToken: refresh,
+            isAuthenticated: true,
+            loading: false,
+            error: null,
+          });
+
           return { success: true };
         } catch (error) {
           const errorData = error.response?.data;
@@ -68,6 +84,8 @@ const useAuthStore = create(
               errorMessage = `اسم المستخدم: ${errorData.username[0]}`;
             } else if (errorData.password) {
               errorMessage = `كلمة المرور: ${errorData.password[0]}`;
+            } else if (errorData.password_confirm) {
+              errorMessage = `تأكيد كلمة المرور: ${errorData.password_confirm[0]}`;
             } else if (errorData.detail) {
               errorMessage = errorData.detail;
             }
@@ -103,7 +121,9 @@ const useAuthStore = create(
       fetchMe: async () => {
         set({ loading: true });
         try {
-          const user = await authAPI.getMe();
+          // response shape: { message, user: {...} }
+          const data = await authAPI.getMe();
+          const user = data.user || data;
           set({ user, loading: false });
           return user;
         } catch {
