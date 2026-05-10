@@ -104,6 +104,14 @@ class LoginViewTest(APITestCase):
         )
         self.assert_login_success_response(response)
 
+    def test_login_with_email_field_success(self):
+        response = self.client.post(
+            self.url,
+            {"email": "login@arena.com", "password": "StrongPass123!"},
+            format="json",
+        )
+        self.assert_login_success_response(response)
+
     def test_login_wrong_password(self):
         response = self.client.post(
             self.url,

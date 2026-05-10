@@ -1,14 +1,21 @@
 import axiosInstance from "./axios";
 
 export const authAPI = {
-  async login(username, password) {
-    const response = await axiosInstance.post("/auth/login/", {
-      username,
+  async login(identifier, password) {
+    const normalizedIdentifier = identifier.trim();
+    const credentials = {
+      username: normalizedIdentifier,
       password,
-    });
+    };
+
+    if (normalizedIdentifier.includes("@")) {
+      credentials.email = normalizedIdentifier;
+    }
+
+    const response = await axiosInstance.post("/auth/login/", credentials);
     return response.data;
   },
-
+  
   async register(username, email, password, passwordConfirm) {
     const response = await axiosInstance.post("/auth/register/", {
       username,

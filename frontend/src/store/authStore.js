@@ -43,12 +43,16 @@ const useAuthStore = create(
 
           return { success: true };
         } catch (error) {
+          const errorData = error.response?.data;
           const errorMessage =
-            error.response?.data?.detail ||
-            error.response?.data?.non_field_errors?.[0] ||
+            errorData?.detail ||
+            errorData?.non_field_errors?.[0] ||
+            errorData?.username?.[0] ||
+            errorData?.email?.[0] ||
+            errorData?.password?.[0] ||
             "فشل تسجيل الدخول. تحقق من البيانات.";
 
-          set({ loading: false, error: errorMessage });
+          set({ loading: false, error: errorMessage });          
           return { success: false, error: errorMessage };
         }
       },

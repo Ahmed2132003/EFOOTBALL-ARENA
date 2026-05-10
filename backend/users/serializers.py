@@ -7,8 +7,18 @@ User = get_user_model()
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """JWT serializer يضيف بيانات إضافية للـ token payload والـ response."""
+    """JWT serializer يضيف بيانات إضافية للـ token payload والـ response.
 
+    يقبل تسجيل الدخول بأي من الحقول الآتية حتى لا يفشل الطلب لو
+    الواجهة أرسلت البريد الإلكتروني في حقل ``email`` بدل ``username``:
+    ``username`` أو ``email`` أو ``login`` أو ``identifier``.
+    """
+
+    username = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    email = serializers.EmailField(required=False, allow_blank=True, write_only=True)
+    login = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    identifier = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -20,11 +30,21 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs):
-        login_identifier = attrs.get(self.username_field, "").strip()
+        login_identifier = (
+            attrs.get(self.username_field)
+            or attrs.get("email")
+            or attrs.get("login")
+            or attrs.get("identifier")
+            or ""
+        ).strip()
 
-        if login_identifier:
-            attrs[self.username_field] = login_identifier
+        if not login_identifier:
+            raise serializers.ValidationError(
+                {"non_field_errors": ["Username or email is required."]}
+            )
 
+        attrs[self.username_field] = login_identifier
+        
         if "@" in login_identifier:
             user = (
                 User.objects.filter(email__iexact=login_identifier)
