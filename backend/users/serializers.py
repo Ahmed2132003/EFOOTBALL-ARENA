@@ -19,9 +19,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token["username"]   = user.username
-        token["rank_level"] = user.rank_level
-        token["rating"]     = user.rating
+        token["username"]    = user.username
+        token["rank_level"]  = user.rank_level
+        token["rating"]      = user.rating
         token["is_verified"] = user.is_verified
         return token
 
@@ -32,7 +32,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             or attrs.get("login")
             or attrs.get("identifier")
             or ""
-        ).strip()
+        )
+
+        # تحويل EmailField object إلى string إذا لزم
+        if not isinstance(login_identifier, str):
+            login_identifier = str(login_identifier)
+
+        login_identifier = login_identifier.strip()
 
         if not login_identifier:
             raise serializers.ValidationError(
@@ -153,9 +159,9 @@ def validate_avatar_file(avatar):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    avatar_url     = serializers.SerializerMethodField()
-    draws          = serializers.SerializerMethodField()
-    win_rate       = serializers.SerializerMethodField()
+    avatar_url = serializers.SerializerMethodField()
+    draws      = serializers.SerializerMethodField()
+    win_rate   = serializers.SerializerMethodField()
 
     class Meta:
         model = User

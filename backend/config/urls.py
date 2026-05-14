@@ -5,30 +5,34 @@
 import redis
 from django.contrib import admin
 from django.db import connection
-from django.http import JsonResponse
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
 def health_check(request):
     """
     /health/ — Basic health check.
     يُستخدم في Load Balancers و CI/CD للتحقق أن التطبيق يعمل.
     """
-    return JsonResponse(
+    return Response(
         {"status": "ok", "version": "1.0.0", "service": "efootball-arena-backend"}
     )
 
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
 def readiness_check(request):
     """
     /api/ready/ — Deep readiness check.
     يتحقق من:
     - اتصال قاعدة البيانات
     - اتصال Redis
-
-    يُستخدم في Kubernetes readiness probes و CI/CD.
     """
     checks = {}
     overall_status = "ok"
@@ -53,7 +57,7 @@ def readiness_check(request):
 
     http_status = 200 if overall_status == "ok" else 503
 
-    return JsonResponse(
+    return Response(
         {
             "status": overall_status,
             "version": "1.0.0",
