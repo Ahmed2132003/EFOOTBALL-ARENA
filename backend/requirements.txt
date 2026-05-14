@@ -9,24 +9,42 @@ django==4.2.9
 djangorestframework==3.14.0
 
 # PostgreSQL Adapter
-# psycopg2-binary: النسخة الجاهزة بدون compile — مثالية للـ Docker
 psycopg2-binary==2.9.9
 
-# CORS Headers — للسماح لـ React بالتواصل مع Django
+# CORS Headers
 django-cors-headers==4.3.1
 
-# Environment Variables — قراءة .env بأمان
+# Environment Variables
 python-decouple==3.8
 
 # Gunicorn — Production WSGI Server
 gunicorn==21.2.0
 
-# Django Filter — للـ filtering في API
+# Django Filter
 django-filter==23.5
 
-# Pillow — لمعالجة الصور (مطلوب لـ ImageField)
+# Pillow — Image Processing
 Pillow==10.2.0
 
+# JWT Authentication
 djangorestframework-simplejwt==5.3.1
+
+# AWS S3 / MinIO Storage
 boto3==1.43.6
 django-storages==1.14.6
+
+# ============================================
+# Celery + Redis — Async Task Processing
+# ============================================
+
+# Celery — Distributed Task Queue
+celery==5.3.6
+
+# Redis — Message Broker + Result Backend
+redis==5.0.1
+
+# Django Celery Beat — Periodic Tasks Scheduler
+django-celery-beat==2.6.0
+
+# Flower — Celery Monitoring Dashboard
+flower==2.0.1

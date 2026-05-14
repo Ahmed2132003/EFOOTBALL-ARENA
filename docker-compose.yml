@@ -1,6 +1,7 @@
 # ============================================
 # eFootball Arena — Docker Compose
-# Ports: Backend=8765 | Frontend=5500 | DB=5433
+# Ports: Backend=8765 | Frontend=5500 | DB=5434
+#        Redis=6379   | Flower=5555
 # ============================================
 
 version: "3.9"
@@ -19,7 +20,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      # host:container — 5433 خارجياً، 5432 داخل الـ network
       - "5434:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
@@ -27,6 +27,28 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks:
+      - efootball_network
+
+  # ── Redis Message Broker ─────────────────────
+  # يستخدمه Celery كـ Message Broker و Result Backend
+  # كل المهام تمر عبر Redis قبل أن يستلمها Worker
+  redis:
+    image: redis:7-alpine
+    container_name: efootball_redis
+    restart: unless-stopped
+    # تشغيل Redis مع persistence لحماية البيانات
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
     networks:
       - efootball_network
 
@@ -41,18 +63,109 @@ services:
       - ./backend/.env
     environment:
       - DB_HOST=db
-      # داخل Docker الـ DB port هو 5432 دايماً
       - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     volumes:
       - ./backend:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     ports:
-      # host:container
       - "8765:8000"
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - efootball_network
+
+  # ── Celery Worker ────────────────────────────
+  # يستقبل المهام من Redis وينفذها
+  # يمكن تشغيل عدة workers للـ scaling
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: efootball_celery_worker
+    restart: unless-stopped
+    # تشغيل Celery Worker بدلاً من Django server
+    command: celery -A config worker --loglevel=info --concurrency=4
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - ./backend:/app
+      - media_volume:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    networks:
+      - efootball_network
+
+  # ── Celery Beat Scheduler ────────────────────
+  # يشغّل المهام الدورية المجدولة (Cron Jobs)
+  # مثال: تحديث الرانك يومياً، إرسال تقارير أسبوعية
+  celery_beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: efootball_celery_beat
+    restart: unless-stopped
+    # تشغيل Beat Scheduler
+    command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    networks:
+      - efootball_network
+
+  # ── Flower Monitoring Dashboard ──────────────
+  # واجهة ويب لمراقبة Celery Workers والمهام
+  # متاح على: http://localhost:5555
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: efootball_flower
+    restart: unless-stopped
+    # تشغيل Flower على بورت 5555
+    command: celery -A config flower --port=5555 --broker=redis://redis:6379/0
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      redis:
+        condition: service_healthy
+      celery_worker:
+        condition: service_started
     networks:
       - efootball_network
 
@@ -68,10 +181,8 @@ services:
       - ./frontend/.env
     volumes:
       - ./frontend:/app
-      # منع تعارض node_modules بين host و container
       - /app/node_modules
     ports:
-      # host:container
       - "5500:3000"
     depends_on:
       - backend
@@ -81,6 +192,8 @@ services:
 # ── Volumes ──────────────────────────────────
 volumes:
   postgres_data:
+    driver: local
+  redis_data:       # Redis persistence volume
     driver: local
   static_volume:
     driver: local

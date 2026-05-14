@@ -18,6 +18,10 @@ from .serializers import (
 )
 from .throttles import LoginRateThrottle, RegisterRateThrottle
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 User = get_user_model()
 
 
@@ -31,10 +35,30 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
+        # ─── Async Welcome Email ──────────────────────────────────────────────
+        # إرسال بريد ترحيبي بشكل غير متزامن عبر Celery
+        # .delay() ترسل المهمة لـ Redis ولا تنتظر اكتمالها
+        # هذا يجعل الـ API response أسرع بكثير
+        try:
+            from users.tasks import send_welcome_email
+            task = send_welcome_email.delay(user.id)
+            logger.info(
+                f"📧 Welcome email task queued | "
+                f"user_id={user.id} | username={user.username} | "
+                f"task_id={task.id}"
+            )
+        except Exception as exc:
+            # إذا فشل Redis، لا نوقف التسجيل — نسجل الخطأ فقط
+            logger.error(
+                f"⚠️ Failed to queue welcome email | "
+                f"user_id={user.id} | error={str(exc)}"
+            )
+        # ─────────────────────────────────────────────────────────────────────
+
         refresh = RefreshToken.for_user(user)
-        refresh["username"]   = user.username
-        refresh["rank_level"] = user.rank_level
-        refresh["rating"]     = user.rating
+        refresh["username"]    = user.username
+        refresh["rank_level"]  = user.rank_level
+        refresh["rating"]      = user.rating
         refresh["is_verified"] = user.is_verified
 
         return Response(
@@ -137,10 +161,6 @@ class MeView(generics.RetrieveUpdateAPIView):
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    """
-    GET  /api/v1/users/profile/   → current user profile
-    PATCH /api/v1/users/profile/  → update profile + avatar
-    """
     serializer_class   = UserProfileSerializer
     permission_classes = [IsAuthenticated]
     parser_classes     = [MultiPartParser, FormParser, JSONParser]
@@ -167,9 +187,6 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
 
 class PublicProfileView(generics.RetrieveAPIView):
-    """
-    GET /api/v1/users/profile/:username/
-    """
     serializer_class   = PublicProfileSerializer
     permission_classes = [AllowAny]
     lookup_field       = "username"
@@ -182,9 +199,6 @@ class PublicProfileView(generics.RetrieveAPIView):
 
 
 class PasswordChangeView(APIView):
-    """
-    POST /api/v1/users/change-password/
-    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request):

@@ -22,6 +22,9 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "django_filters",
+    # ─── Celery Beat — Periodic Tasks ───────────
+    # يتيح إنشاء المهام المجدولة من Django Admin
+    "django_celery_beat",
 ]
 
 LOCAL_APPS = [
@@ -143,3 +146,85 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
+
+# ============================================
+# ⚡ CELERY CONFIGURATION — Async Task Queue
+# ============================================
+
+# ─── Broker (Redis) ───────────────────────────────────────────────────────────
+# Redis يستقبل المهام من Django ويوزعها على Workers
+# داخل Docker: redis هو اسم الـ service
+CELERY_BROKER_URL = config(
+    "CELERY_BROKER_URL",
+    default="redis://redis:6379/0"
+)
+
+# ─── Result Backend (Redis) ───────────────────────────────────────────────────
+# تخزين نتائج المهام في Redis (مفيد للـ monitoring)
+CELERY_RESULT_BACKEND = config(
+    "CELERY_RESULT_BACKEND",
+    default="redis://redis:6379/0"
+)
+
+# ─── Serialization — Security ─────────────────────────────────────────────────
+# JSON فقط — منع pickle لأنه غير آمن في Production
+CELERY_TASK_SERIALIZER          = "json"
+CELERY_RESULT_SERIALIZER        = "json"
+CELERY_ACCEPT_CONTENT           = ["json"]
+CELERY_EVENT_SERIALIZER         = "json"
+
+# ─── Timezone ─────────────────────────────────────────────────────────────────
+CELERY_TIMEZONE                 = "Africa/Cairo"
+CELERY_ENABLE_UTC               = True
+
+# ─── Beat Scheduler ───────────────────────────────────────────────────────────
+# DatabaseScheduler يخزن الجداول في PostgreSQL
+# يتيح إنشاء وتعديل المهام المجدولة من Django Admin
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+# ─── Task Tracking ────────────────────────────────────────────────────────────
+# تتبع حالة المهام (PENDING → STARTED → SUCCESS/FAILURE)
+CELERY_TASK_TRACK_STARTED       = True
+
+# ─── Time Limits ──────────────────────────────────────────────────────────────
+# منع المهام من الاستمرار إلى الأبد
+# soft limit: يرسل SoftTimeLimitExceeded exception
+# hard limit: يقتل الـ task بالقوة
+CELERY_TASK_SOFT_TIME_LIMIT     = 300   # 5 دقائق
+CELERY_TASK_TIME_LIMIT          = 600   # 10 دقائق
+
+# ─── Worker Settings ──────────────────────────────────────────────────────────
+# عدد العمليات المتزامنة في كل Worker
+CELERY_WORKER_CONCURRENCY       = 4
+
+# ─── Result Expiry ────────────────────────────────────────────────────────────
+# حذف نتائج المهام من Redis بعد يوم واحد
+CELERY_RESULT_EXPIRES           = 86400  # 24 ساعة
+
+# ─── Retry on Startup ─────────────────────────────────────────────────────────
+# إعادة محاولة الاتصال بـ Redis عند البدء إذا لم يكن متاحاً
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+# ─── Prefetch Multiplier ──────────────────────────────────────────────────────
+# عدد المهام التي يجلبها Worker مسبقاً
+# القيمة 1 تضمن توزيع عادل للمهام
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
+# ─── Acks Late ────────────────────────────────────────────────────────────────
+# تأكيد المهمة بعد إتمامها وليس قبل
+# يحمي من فقدان المهام عند crash الـ Worker
+CELERY_TASK_ACKS_LATE           = True
+
+# ─── Periodic Tasks (Beat Schedule) ──────────────────────────────────────────
+# مثال على جدولة مهام دورية بدون Django Admin
+# يمكن أيضاً إضافتها من Django Admin عبر django-celery-beat
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    # تحديث الرانك اليومي — كل يوم الساعة 2 صباحاً
+    "daily-rank-update": {
+        "task": "users.tasks.daily_rank_update",
+        "schedule": crontab(hour=2, minute=0),
+        "options": {"expires": 3600},  # تنتهي صلاحيتها بعد ساعة
+    },
+}
