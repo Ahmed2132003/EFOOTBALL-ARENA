@@ -1,0 +1,17 @@
+# ============================================
+# eFootball Arena — Black Configuration
+# ============================================
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  migrations
+  | __pycache__
+  | .git
+  | .venv
+  | venv
+)/
+'''

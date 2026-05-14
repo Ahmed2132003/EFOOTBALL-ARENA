@@ -48,3 +48,40 @@ django-celery-beat==2.6.0
 
 # Flower — Celery Monitoring Dashboard
 flower==2.0.1
+
+# ============================================
+# Testing & Quality Assurance
+# ============================================
+
+# Pytest — Testing Framework
+pytest==7.4.4
+
+# Pytest Django Integration
+pytest-django==4.7.0
+
+# Coverage Reporting
+pytest-cov==4.1.0
+coverage==7.4.1
+
+# Test Data Factories
+factory-boy==3.3.0
+faker==22.2.0
+
+# Model Bakery — Quick Model Creation
+model-bakery==1.17.0
+
+# ============================================
+# Code Quality & Formatting
+# ============================================
+
+# Black — Code Formatter
+black==24.1.1
+
+# Flake8 — Linter
+flake8==7.0.0
+
+# Isort — Import Sorter
+isort==5.13.2
+
+# Pre-commit — Git Hooks
+pre-commit==3.6.0
