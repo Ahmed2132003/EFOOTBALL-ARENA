@@ -1,0 +1,890 @@
+[
+  {
+    "model": "tactics.formation",
+    "pk": 1,
+    "fields": {
+      "name": "4-3-3",
+      "code": "4-3-3",
+      "slug": "4-3-3",
+      "description": "The classic 4-3-3 is one of the most popular formations in eFootball. It provides excellent width through the wingers, solid midfield control with three central midfielders, and a lone striker supported by wide attackers. Best used by players who like to dominate possession and attack through the wings.",
+      "play_style": "possession",
+      "difficulty_level": "intermediate",
+      "attacking_rating": 8,
+      "defensive_rating": 6,
+      "possession_rating": 8,
+      "pressing_rating": 7,
+      "width_rating": 9,
+      "tempo_rating": 7,
+      "is_meta": true,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 2,
+    "fields": {
+      "name": "4-2-1-3",
+      "code": "4-2-1-3",
+      "slug": "4-2-1-3",
+      "description": "The 4-2-1-3 is considered the king of eFootball meta formations. Two defensive midfielders provide exceptional stability, the attacking midfielder acts as a playmaker connecting midfield to attack, and three attackers provide constant threat. Extremely difficult to defend against when played correctly.",
+      "play_style": "tiki_taka",
+      "difficulty_level": "advanced",
+      "attacking_rating": 9,
+      "defensive_rating": 7,
+      "possession_rating": 9,
+      "pressing_rating": 6,
+      "width_rating": 8,
+      "tempo_rating": 8,
+      "is_meta": true,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 3,
+    "fields": {
+      "name": "4-1-2-3",
+      "code": "4-1-2-3",
+      "slug": "4-1-2-3",
+      "description": "The 4-1-2-3 features a single holding midfielder shielding the defence, two box-to-box central midfielders, and a dangerous front three. This formation excels at rapid transitions and direct attacking play. The lone pivot provides defensive cover while the two CMs drive forward.",
+      "play_style": "counter_attack",
+      "difficulty_level": "intermediate",
+      "attacking_rating": 8,
+      "defensive_rating": 6,
+      "possession_rating": 7,
+      "pressing_rating": 7,
+      "width_rating": 8,
+      "tempo_rating": 9,
+      "is_meta": true,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 4,
+    "fields": {
+      "name": "4-2-2-2",
+      "code": "4-2-2-2",
+      "slug": "4-2-2-2",
+      "description": "The 4-2-2-2 is a compact and aggressive formation that floods the central areas. Two DMs protect the backline, two attacking midfielders create overloads in the half-spaces, and a partnership of two strikers provides dual attacking threats. Excellent for pressing and winning second balls.",
+      "play_style": "high_press",
+      "difficulty_level": "advanced",
+      "attacking_rating": 8,
+      "defensive_rating": 7,
+      "possession_rating": 6,
+      "pressing_rating": 9,
+      "width_rating": 5,
+      "tempo_rating": 8,
+      "is_meta": false,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 5,
+    "fields": {
+      "name": "3-2-3-2",
+      "code": "3-2-3-2",
+      "slug": "3-2-3-2",
+      "description": "The 3-2-3-2 is an ultra-attacking formation for experienced players only. Three centre-backs provide the defensive base, two defensive midfielders cover the flanks, three attacking midfielders create chances in the final third, and two strikers cause havoc. High risk, extremely high reward.",
+      "play_style": "wing_play",
+      "difficulty_level": "professional",
+      "attacking_rating": 10,
+      "defensive_rating": 4,
+      "possession_rating": 7,
+      "pressing_rating": 7,
+      "width_rating": 8,
+      "tempo_rating": 9,
+      "is_meta": false,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 6,
+    "fields": {
+      "name": "3-4-3",
+      "code": "3-4-3",
+      "slug": "3-4-3",
+      "description": "The 3-4-3 provides a dynamic 3-5-2 shape in defence that transforms into an attacking 3-4-3 with possession. The wing-backs are crucial, providing width and defensive cover simultaneously. Three attackers create constant pressure. Perfect for players who can manage the transition phases.",
+      "play_style": "balanced",
+      "difficulty_level": "advanced",
+      "attacking_rating": 8,
+      "defensive_rating": 7,
+      "possession_rating": 7,
+      "pressing_rating": 8,
+      "width_rating": 9,
+      "tempo_rating": 7,
+      "is_meta": false,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 7,
+    "fields": {
+      "name": "5-2-1-2",
+      "code": "5-2-1-2",
+      "slug": "5-2-1-2",
+      "description": "The 5-2-1-2 is the ultimate defensive formation in eFootball. Five defenders make it nearly impossible to break down, two holding midfielders add another defensive layer, the attacking midfielder links play, and two strikers provide goal threat on the counter. A fortress-style approach.",
+      "play_style": "defensive",
+      "difficulty_level": "intermediate",
+      "attacking_rating": 5,
+      "defensive_rating": 10,
+      "possession_rating": 5,
+      "pressing_rating": 4,
+      "width_rating": 6,
+      "tempo_rating": 5,
+      "is_meta": false,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 8,
+    "fields": {
+      "name": "4-4-2",
+      "code": "4-4-2",
+      "slug": "4-4-2",
+      "description": "The classic 4-4-2 is the foundation formation that all eFootball players should master. Two banks of four provide excellent defensive structure, while the two strikers work in partnership. The flat midfield provides balance between attack and defence. Great for beginners to learn the fundamentals.",
+      "play_style": "balanced",
+      "difficulty_level": "beginner",
+      "attacking_rating": 7,
+      "defensive_rating": 7,
+      "possession_rating": 6,
+      "pressing_rating": 7,
+      "width_rating": 7,
+      "tempo_rating": 6,
+      "is_meta": false,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 9,
+    "fields": {
+      "name": "4-3-1-2",
+      "code": "4-3-1-2",
+      "slug": "4-3-1-2",
+      "description": "The 4-3-1-2 is a strong central-focused formation. Three midfielders control the centre of the pitch, an advanced playmaker operates between midfield and attack, and two strikers work in combination. Excellent for teams with creative playmakers and powerful striker partnerships.",
+      "play_style": "tiki_taka",
+      "difficulty_level": "intermediate",
+      "attacking_rating": 8,
+      "defensive_rating": 6,
+      "possession_rating": 8,
+      "pressing_rating": 7,
+      "width_rating": 5,
+      "tempo_rating": 7,
+      "is_meta": false,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.formation",
+    "pk": 10,
+    "fields": {
+      "name": "4-2-3-1",
+      "code": "4-2-3-1",
+      "slug": "4-2-3-1",
+      "description": "The 4-2-3-1 is a highly versatile formation used by many top eFootball players. Two defensive midfielders provide a solid defensive screen, three attacking midfielders create chances from deep and wide positions, and a lone striker finishes. Excellent balance between attack and defence.",
+      "play_style": "possession",
+      "difficulty_level": "intermediate",
+      "attacking_rating": 7,
+      "defensive_rating": 8,
+      "possession_rating": 8,
+      "pressing_rating": 7,
+      "width_rating": 7,
+      "tempo_rating": 7,
+      "is_meta": true,
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 1,
+    "fields": {
+      "formation": 1,
+      "position_name": "Goalkeeper",
+      "short_name": "GK",
+      "x_coordinate": 50.0,
+      "y_coordinate": 5.0,
+      "tactical_role": "GK",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 2,
+    "fields": {
+      "formation": 1,
+      "position_name": "Left Back",
+      "short_name": "LB",
+      "x_coordinate": 10.0,
+      "y_coordinate": 25.0,
+      "tactical_role": "LB",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 3,
+    "fields": {
+      "formation": 1,
+      "position_name": "Left Centre-Back",
+      "short_name": "LCB",
+      "x_coordinate": 33.0,
+      "y_coordinate": 20.0,
+      "tactical_role": "CB",
+      "display_order": 3
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 4,
+    "fields": {
+      "formation": 1,
+      "position_name": "Right Centre-Back",
+      "short_name": "RCB",
+      "x_coordinate": 67.0,
+      "y_coordinate": 20.0,
+      "tactical_role": "CB",
+      "display_order": 4
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 5,
+    "fields": {
+      "formation": 1,
+      "position_name": "Right Back",
+      "short_name": "RB",
+      "x_coordinate": 90.0,
+      "y_coordinate": 25.0,
+      "tactical_role": "RB",
+      "display_order": 5
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 6,
+    "fields": {
+      "formation": 1,
+      "position_name": "Left Central Midfielder",
+      "short_name": "LCM",
+      "x_coordinate": 30.0,
+      "y_coordinate": 50.0,
+      "tactical_role": "CMF",
+      "display_order": 6
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 7,
+    "fields": {
+      "formation": 1,
+      "position_name": "Central Midfielder",
+      "short_name": "CM",
+      "x_coordinate": 50.0,
+      "y_coordinate": 45.0,
+      "tactical_role": "CMF",
+      "display_order": 7
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 8,
+    "fields": {
+      "formation": 1,
+      "position_name": "Right Central Midfielder",
+      "short_name": "RCM",
+      "x_coordinate": 70.0,
+      "y_coordinate": 50.0,
+      "tactical_role": "CMF",
+      "display_order": 8
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 9,
+    "fields": {
+      "formation": 1,
+      "position_name": "Left Winger",
+      "short_name": "LW",
+      "x_coordinate": 10.0,
+      "y_coordinate": 75.0,
+      "tactical_role": "LWF",
+      "display_order": 9
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 10,
+    "fields": {
+      "formation": 1,
+      "position_name": "Centre Forward",
+      "short_name": "CF",
+      "x_coordinate": 50.0,
+      "y_coordinate": 85.0,
+      "tactical_role": "CF",
+      "display_order": 10
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 11,
+    "fields": {
+      "formation": 1,
+      "position_name": "Right Winger",
+      "short_name": "RW",
+      "x_coordinate": 90.0,
+      "y_coordinate": 75.0,
+      "tactical_role": "RWF",
+      "display_order": 11
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 12,
+    "fields": {
+      "formation": 2,
+      "position_name": "Goalkeeper",
+      "short_name": "GK",
+      "x_coordinate": 50.0,
+      "y_coordinate": 5.0,
+      "tactical_role": "GK",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 13,
+    "fields": {
+      "formation": 2,
+      "position_name": "Left Back",
+      "short_name": "LB",
+      "x_coordinate": 10.0,
+      "y_coordinate": 25.0,
+      "tactical_role": "LB",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 14,
+    "fields": {
+      "formation": 2,
+      "position_name": "Left Centre-Back",
+      "short_name": "LCB",
+      "x_coordinate": 33.0,
+      "y_coordinate": 20.0,
+      "tactical_role": "CB",
+      "display_order": 3
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 15,
+    "fields": {
+      "formation": 2,
+      "position_name": "Right Centre-Back",
+      "short_name": "RCB",
+      "x_coordinate": 67.0,
+      "y_coordinate": 20.0,
+      "tactical_role": "CB",
+      "display_order": 4
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 16,
+    "fields": {
+      "formation": 2,
+      "position_name": "Right Back",
+      "short_name": "RB",
+      "x_coordinate": 90.0,
+      "y_coordinate": 25.0,
+      "tactical_role": "RB",
+      "display_order": 5
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 17,
+    "fields": {
+      "formation": 2,
+      "position_name": "Left Defensive Midfielder",
+      "short_name": "LDM",
+      "x_coordinate": 35.0,
+      "y_coordinate": 38.0,
+      "tactical_role": "DMF",
+      "display_order": 6
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 18,
+    "fields": {
+      "formation": 2,
+      "position_name": "Right Defensive Midfielder",
+      "short_name": "RDM",
+      "x_coordinate": 65.0,
+      "y_coordinate": 38.0,
+      "tactical_role": "DMF",
+      "display_order": 7
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 19,
+    "fields": {
+      "formation": 2,
+      "position_name": "Attacking Midfielder",
+      "short_name": "AMF",
+      "x_coordinate": 50.0,
+      "y_coordinate": 60.0,
+      "tactical_role": "AMF",
+      "display_order": 8
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 20,
+    "fields": {
+      "formation": 2,
+      "position_name": "Left Winger",
+      "short_name": "LW",
+      "x_coordinate": 10.0,
+      "y_coordinate": 78.0,
+      "tactical_role": "LWF",
+      "display_order": 9
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 21,
+    "fields": {
+      "formation": 2,
+      "position_name": "Centre Forward",
+      "short_name": "CF",
+      "x_coordinate": 50.0,
+      "y_coordinate": 88.0,
+      "tactical_role": "CF",
+      "display_order": 10
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 22,
+    "fields": {
+      "formation": 2,
+      "position_name": "Right Winger",
+      "short_name": "RW",
+      "x_coordinate": 90.0,
+      "y_coordinate": 78.0,
+      "tactical_role": "RWF",
+      "display_order": 11
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 23,
+    "fields": {
+      "formation": 10,
+      "position_name": "Goalkeeper",
+      "short_name": "GK",
+      "x_coordinate": 50.0,
+      "y_coordinate": 5.0,
+      "tactical_role": "GK",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 24,
+    "fields": {
+      "formation": 10,
+      "position_name": "Left Back",
+      "short_name": "LB",
+      "x_coordinate": 10.0,
+      "y_coordinate": 25.0,
+      "tactical_role": "LB",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 25,
+    "fields": {
+      "formation": 10,
+      "position_name": "Left Centre-Back",
+      "short_name": "LCB",
+      "x_coordinate": 33.0,
+      "y_coordinate": 20.0,
+      "tactical_role": "CB",
+      "display_order": 3
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 26,
+    "fields": {
+      "formation": 10,
+      "position_name": "Right Centre-Back",
+      "short_name": "RCB",
+      "x_coordinate": 67.0,
+      "y_coordinate": 20.0,
+      "tactical_role": "CB",
+      "display_order": 4
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 27,
+    "fields": {
+      "formation": 10,
+      "position_name": "Right Back",
+      "short_name": "RB",
+      "x_coordinate": 90.0,
+      "y_coordinate": 25.0,
+      "tactical_role": "RB",
+      "display_order": 5
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 28,
+    "fields": {
+      "formation": 10,
+      "position_name": "Left Defensive Midfielder",
+      "short_name": "LDM",
+      "x_coordinate": 33.0,
+      "y_coordinate": 38.0,
+      "tactical_role": "DMF",
+      "display_order": 6
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 29,
+    "fields": {
+      "formation": 10,
+      "position_name": "Right Defensive Midfielder",
+      "short_name": "RDM",
+      "x_coordinate": 67.0,
+      "y_coordinate": 38.0,
+      "tactical_role": "DMF",
+      "display_order": 7
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 30,
+    "fields": {
+      "formation": 10,
+      "position_name": "Left Attacking Midfielder",
+      "short_name": "LAM",
+      "x_coordinate": 20.0,
+      "y_coordinate": 62.0,
+      "tactical_role": "AMF",
+      "display_order": 8
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 31,
+    "fields": {
+      "formation": 10,
+      "position_name": "Central Attacking Midfielder",
+      "short_name": "CAM",
+      "x_coordinate": 50.0,
+      "y_coordinate": 65.0,
+      "tactical_role": "AMF",
+      "display_order": 9
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 32,
+    "fields": {
+      "formation": 10,
+      "position_name": "Right Attacking Midfielder",
+      "short_name": "RAM",
+      "x_coordinate": 80.0,
+      "y_coordinate": 62.0,
+      "tactical_role": "AMF",
+      "display_order": 10
+    }
+  },
+  {
+    "model": "tactics.playerposition",
+    "pk": 33,
+    "fields": {
+      "formation": 10,
+      "position_name": "Centre Forward",
+      "short_name": "CF",
+      "x_coordinate": 50.0,
+      "y_coordinate": 85.0,
+      "tactical_role": "CF",
+      "display_order": 11
+    }
+  },
+  {
+    "model": "tactics.tacticcard",
+    "pk": 1,
+    "fields": {
+      "formation": 1,
+      "title": "Complete 4-3-3 Tactical Guide — eFootball 2024",
+      "content": "The 4-3-3 is the Swiss Army knife of eFootball formations. It offers excellent width through the wingers, solid midfield control with three central midfielders, and devastating attacks through combination play. This guide covers everything from basic setup to advanced tactical triggers.",
+      "strengths": "Exceptional width through LW and RW channels. Solid midfield triangle that controls the centre. Wingers can cut inside or stay wide depending on the situation. The lone striker holds up play and creates space for overlapping runs. High press capability with three attacking players pushing forward.",
+      "weaknesses": "Vulnerable to teams with two strikers if the fullbacks push too high. The three midfielders can be overrun by teams using a diamond shape. Wide areas behind the fullbacks can be exploited by pacey wingers. Requires high stamina players throughout the team.",
+      "use_when": "Use against defensive formations like 4-4-2 flat or 5-3-2 where you need width. Ideal when you have fast, skilful wingers in your squad. Perfect for teams with a possession-based playstyle and technical midfielders. Use when you want to dominate through ball circulation.",
+      "avoid_when": "Avoid against 4-2-1-3 or 4-3-2-1 if your fullbacks have poor defensive ratings. Do not use if your wingers lack pace or dribbling ability. Struggle against high-pressing teams if your midfielders have poor physical stats.",
+      "recommended_manager": "Possession manager with Attacking Instructions: Tiki-Taka or Short Pass. Defensive line: High. Compactness: Wide. Build Up: Short Pass.",
+      "offensive_tips": "Use the CF's movement to create space for the AMs. Trigger overlapping runs with the fullbacks to create 2v1 on the wings. Use the central CM as a false 9 to drag defenders wide. Combine with the SS to create through-ball opportunities.",
+      "defensive_tips": "Drop the wingers back to form a 4-5-1 defensive shape when out of possession. Use the press trigger (R1) to press with the attacking three. Tuck the central CM deeper to form a double pivot. Keep the defensive line at medium-high to trap opponents offside.",
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.tacticcard",
+    "pk": 2,
+    "fields": {
+      "formation": 2,
+      "title": "Master Guide: 4-2-1-3 — The Meta Formation",
+      "content": "The 4-2-1-3 is the most dominant formation in eFootball history. The double pivot provides unparalleled defensive stability while the AMF links play between defence and attack. The front three create constant movement and overload defenders. Master this and you will rise through the ranks.",
+      "strengths": "Double pivot (two DMFs) makes it nearly impossible to score through the middle. AMF acts as a creative hub with complete freedom. Front three provides numerical superiority against four-man defences. Extremely compact shape that limits opponent options. High defensive recovery speed due to defensive structure.",
+      "weaknesses": "The AMF position requires a top-quality player with high passing and vision stats. Can be exposed on the wings if the fullbacks push too high simultaneously. Requires technical players who understand positional play. Less effective with slow or low-stamina squads.",
+      "use_when": "Use in any competitive match where you want maximum control. Ideal against attacking formations like 4-3-3 or 3-4-3. Perfect when you have a world-class AMF in your squad. Use when you need to control possession and limit opponent chances.",
+      "avoid_when": "Avoid if you lack a quality AMF — the position is the key to the entire system. Do not use against ultra-defensive 5-man backline teams without adjusting the AMF to cut inside more. Struggle if DMFs have poor passing ability since they need to distribute from deep.",
+      "recommended_manager": "Tiki-Taka manager with Attack: Combination Play. Support Range: Wide. Defensive Approach: Middle (5). Defensive Line: 6-7.",
+      "offensive_tips": "Set AMF to Roam Flank to create overloads on the wings. Use DMFs to switch play quickly to the isolated winger. The front three should use One-Two combinations constantly. Use the fullbacks as late runners to create 4v3 situations in the final third.",
+      "defensive_tips": "The two DMFs should always be positioned centrally — never both attacking simultaneously. Use contain press when defending to maintain shape. Set defensive line to 5-6 to prevent through balls. The three forwards should press in a coordinated wave to force mistakes.",
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.tacticcard",
+    "pk": 3,
+    "fields": {
+      "formation": 10,
+      "title": "4-2-3-1 Complete Guide — Balanced Mastery",
+      "content": "The 4-2-3-1 is the gold standard of balanced football formations. Exceptional at both ends of the pitch, this formation is perfect for players who want reliability without sacrificing attacking threat. The three AMFs provide creativity while the double pivot locks down the midfield.",
+      "strengths": "Excellent balance between attack and defence. Three AMFs create constant pressure on the opponent's backline. Double pivot provides midfield dominance and defensive security. Lone striker can play as a target man or false 9 depending on situation. Fullbacks can join attacks knowing the DMFs provide cover.",
+      "weaknesses": "The lone striker can be isolated if the AMFs do not provide support quickly enough. Wide areas can be exploited if the wide AMFs track back too slowly. Requires good stamina across all positions due to the pressing demands.",
+      "use_when": "Use when you want a reliable, all-round formation that works against any opponent. Ideal for Division of Honor or Top Divisions where you face varied formations. Perfect when your squad has quality in all areas rather than one specific strength.",
+      "avoid_when": "Avoid against 3-back formations where the extra width can overwhelm your wide AMFs. Do not use if your lone striker has poor hold-up play attributes — they will be isolated.",
+      "recommended_manager": "Balanced manager with Short Pass build-up. Attack: Combination Play. Support Range: 4-6. Defensive Approach: Middle.",
+      "offensive_tips": "Use the central AMF as a shadow striker to arrive late into the box. Switch play quickly through the DMFs to exploit the wide AMFs. The lone striker should drop deep to create space for the central AMF runs.",
+      "defensive_tips": "The wide AMFs should track fullback runs diligently. Set DMFs to Defensive instructions for maximum coverage. Maintain mid-block when opponent has possession. Use the three AMFs to press as a unit when opponent has the ball in their own half.",
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 1,
+    "fields": {
+      "formation": 1,
+      "usage_count": 15420,
+      "win_rate": 54.30,
+      "average_goals_scored": 2.10,
+      "average_goals_conceded": 1.65,
+      "popularity_rank": 2,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 2,
+    "fields": {
+      "formation": 2,
+      "usage_count": 28750,
+      "win_rate": 61.80,
+      "average_goals_scored": 2.45,
+      "average_goals_conceded": 1.40,
+      "popularity_rank": 1,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 3,
+    "fields": {
+      "formation": 3,
+      "usage_count": 12300,
+      "win_rate": 52.10,
+      "average_goals_scored": 2.20,
+      "average_goals_conceded": 1.80,
+      "popularity_rank": 3,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 4,
+    "fields": {
+      "formation": 4,
+      "usage_count": 8900,
+      "win_rate": 49.50,
+      "average_goals_scored": 1.95,
+      "average_goals_conceded": 1.75,
+      "popularity_rank": 5,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 5,
+    "fields": {
+      "formation": 5,
+      "usage_count": 4200,
+      "win_rate": 44.20,
+      "average_goals_scored": 2.80,
+      "average_goals_conceded": 2.50,
+      "popularity_rank": 8,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 6,
+    "fields": {
+      "formation": 6,
+      "usage_count": 6100,
+      "win_rate": 50.30,
+      "average_goals_scored": 2.05,
+      "average_goals_conceded": 1.70,
+      "popularity_rank": 6,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 7,
+    "fields": {
+      "formation": 7,
+      "usage_count": 5400,
+      "win_rate": 47.80,
+      "average_goals_scored": 1.50,
+      "average_goals_conceded": 1.20,
+      "popularity_rank": 7,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 8,
+    "fields": {
+      "formation": 8,
+      "usage_count": 9800,
+      "win_rate": 48.50,
+      "average_goals_scored": 1.85,
+      "average_goals_conceded": 1.75,
+      "popularity_rank": 4,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 9,
+    "fields": {
+      "formation": 9,
+      "usage_count": 3800,
+      "win_rate": 45.60,
+      "average_goals_scored": 1.90,
+      "average_goals_conceded": 1.80,
+      "popularity_rank": 9,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.metatracker",
+    "pk": 10,
+    "fields": {
+      "formation": 10,
+      "usage_count": 11200,
+      "win_rate": 53.40,
+      "average_goals_scored": 2.00,
+      "average_goals_conceded": 1.60,
+      "popularity_rank": 10,
+      "last_meta_update": "2026-05-01T00:00:00Z",
+      "updated_at": "2026-05-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.countertactic",
+    "pk": 1,
+    "fields": {
+      "formation": 1,
+      "countered_by": 2,
+      "explanation": "The 4-2-1-3 counters the 4-3-3 through its double pivot which neutralises the three-man midfield. The two DMFs cover more ground than three individual midfielders can handle, denying the 4-3-3 any central penetration. The AMF exploits the space between the 4-3-3 midfield and attack.",
+      "effectiveness_rating": 8,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.countertactic",
+    "pk": 2,
+    "fields": {
+      "formation": 2,
+      "countered_by": 3,
+      "explanation": "The 4-1-2-3 can counter the 4-2-1-3 through rapid vertical transitions that bypass the double pivot. The lone DMF holds position while the two box-to-box midfielders exploit the space behind the 4-2-1-3's AMF. The front three stretches the 4-2-1-3's defence with wide runs.",
+      "effectiveness_rating": 6,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.countertactic",
+    "pk": 3,
+    "fields": {
+      "formation": 8,
+      "countered_by": 1,
+      "explanation": "The 4-3-3 overwhelms the flat 4-4-2 through superior width and midfield numbers. The three central midfielders outnumber the two 4-4-2 midfielders, and the wide wingers create constant 1v1 situations against the fullbacks. The 4-4-2 simply cannot cope with attacks from all directions simultaneously.",
+      "effectiveness_rating": 7,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.countertactic",
+    "pk": 4,
+    "fields": {
+      "formation": 6,
+      "countered_by": 7,
+      "explanation": "The 5-2-1-2 completely nullifies the 3-4-3's wing-back system. Five defenders easily handle three attackers, and the two central midfielders deal with the 3-4-3's wing-backs. The 5-2-1-2's compact shape denies all the spaces that the 3-4-3 relies upon to create chances.",
+      "effectiveness_rating": 9,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tactics.countertactic",
+    "pk": 5,
+    "fields": {
+      "formation": 10,
+      "countered_by": 2,
+      "explanation": "The 4-2-1-3 counters the 4-2-3-1 by overloading the attacking zones. The three attackers of the 4-2-1-3 versus three AMFs creates numerical equality in attack but the 4-2-1-3's DMF pair is superior to the 4-2-3-1's DMF pair in terms of collective defensive coverage.",
+      "effectiveness_rating": 7,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  }
+]

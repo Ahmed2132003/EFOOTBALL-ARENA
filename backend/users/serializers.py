@@ -1,7 +1,9 @@
 import os
-from django.contrib.auth import get_user_model
+
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 User = get_user_model()
@@ -11,64 +13,84 @@ MAX_AVATAR_SIZE_MB = 5
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    username   = serializers.CharField(required=False, allow_blank=True, write_only=True)
-    email      = serializers.EmailField(required=False, allow_blank=True, write_only=True)
-    login      = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    username = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    email = serializers.EmailField(required=False, allow_blank=True, write_only=True)
+    login = serializers.CharField(required=False, allow_blank=True, write_only=True)
     identifier = serializers.CharField(required=False, allow_blank=True, write_only=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields[self.username_field].required = False
 
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token["username"]    = user.username
-        token["rank_level"]  = user.rank_level
-        token["rating"]      = user.rating
+        token["username"] = user.username
+        token["rank_level"] = user.rank_level
+        token["rating"] = user.rating
         token["is_verified"] = user.is_verified
         return token
 
     def validate(self, attrs):
-        login_identifier = (
-            attrs.get(self.username_field)
-            or attrs.get("email")
-            or attrs.get("login")
-            or attrs.get("identifier")
-            or ""
-        )
-
-        # تحويل EmailField object إلى string إذا لزم
+        login_identifier = attrs.get(self.username_field) or ""
         if not isinstance(login_identifier, str):
             login_identifier = str(login_identifier)
-
         login_identifier = login_identifier.strip()
+
+        if not login_identifier:
+            for key in ("email", "login", "identifier"):
+                val = attrs.get(key)
+                if val:
+                    login_identifier = str(val).strip()
+                    break
 
         if not login_identifier:
             raise serializers.ValidationError(
                 {"non_field_errors": ["Username or email is required."]}
             )
 
-        attrs[self.username_field] = login_identifier
+        password = attrs.get("password", "")
+        if not password:
+            raise serializers.ValidationError({"password": ["Password is required."]})
 
         if "@" in login_identifier:
-            user = (
+            user_obj = (
                 User.objects.filter(email__iexact=login_identifier)
                 .only("username")
                 .first()
             )
-            if user:
-                attrs[self.username_field] = user.get_username()
+            username = user_obj.get_username() if user_obj else login_identifier
+        else:
+            username = login_identifier
 
-        data = super().validate(attrs)
-        user = self.user
-        data["user"] = {
-            "id":          user.id,
-            "username":    user.username,
-            "email":       user.email,
-            "rank_level":  user.rank_level,
-            "rating":      user.rating,
-            "avatar":      user.avatar.url if user.avatar else None,
-            "is_verified": user.is_verified,
-            "country":     user.country,
+        user = authenticate(
+            request=self.context.get("request"),
+            username=username,
+            password=password,
+        )
+
+        if user is None:
+            raise AuthenticationFailed(
+                "No active account found with the given credentials."
+            )
+
+        refresh = self.get_token(user)
+        self.user = user
+
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "rank_level": user.rank_level,
+                "rating": user.rating,
+                "avatar": user.avatar.url if user.avatar else None,
+                "is_verified": user.is_verified,
+                "country": user.country,
+            },
         }
-        return data
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -85,7 +107,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "email", "password", "password_confirm", "country", "bio"]
         extra_kwargs = {
-            "email":    {"required": True},
+            "email": {"required": True},
             "username": {"required": True},
         }
 
@@ -145,7 +167,6 @@ class UserMeSerializer(serializers.ModelSerializer):
 
 
 def validate_avatar_file(avatar):
-    """Reusable avatar validation."""
     ext = os.path.splitext(avatar.name)[1].lstrip(".").lower()
     if ext not in ALLOWED_IMAGE_EXTENSIONS:
         raise serializers.ValidationError(
@@ -160,8 +181,8 @@ def validate_avatar_file(avatar):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField()
-    draws      = serializers.SerializerMethodField()
-    win_rate   = serializers.SerializerMethodField()
+    draws = serializers.SerializerMethodField()
+    win_rate = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -194,8 +215,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class PublicProfileSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField()
-    draws      = serializers.SerializerMethodField()
-    win_rate   = serializers.SerializerMethodField()
+    draws = serializers.SerializerMethodField()
+    win_rate = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -220,7 +241,7 @@ class PublicProfileSerializer(serializers.ModelSerializer):
 
 class PasswordChangeSerializer(serializers.Serializer):
     current_password = serializers.CharField(required=True, write_only=True)
-    new_password     = serializers.CharField(required=True, write_only=True, min_length=8)
+    new_password = serializers.CharField(required=True, write_only=True, min_length=8)
     confirm_password = serializers.CharField(required=True, write_only=True)
 
     def validate_current_password(self, value):
