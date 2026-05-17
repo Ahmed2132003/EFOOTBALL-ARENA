@@ -103,3 +103,18 @@ LOGGING = {
         },
     },
 }
+# ── Redis Cache Configuration ───────────────────────────────
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config("CELERY_BROKER_URL", default="redis://redis:6379/0"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 5,
+            "SOCKET_TIMEOUT": 5,
+            "IGNORE_EXCEPTIONS": True,  # Don't crash if Redis is down
+        },
+        "KEY_PREFIX": "efootball",
+        "TIMEOUT": 3600,  # Default 1 hour
+    }
+}
